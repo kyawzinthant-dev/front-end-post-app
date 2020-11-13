@@ -3,11 +3,11 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
-
-
+require('dotenv').config();
 const postsRoutes = require('./routes/posts');
+const userRoutes = require('./routes/user');
 
-mongoose.connect(`mongodb+srv://kzinthant:bJRSaV5iZY6PCMZG@cluster0.ss9il.mongodb.net/postdb?retryWrites=true&w=majority
+mongoose.connect(`mongodb+srv://kzinthant:${process.env.MONGO_ATLAS_PW}@cluster0.ss9il.mongodb.net/postdb?retryWrites=true&w=majority
 `, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
   console.log('Connected to the database')
 }).catch(e => {
@@ -24,11 +24,12 @@ app.use((req, res, next) => {
   res.setHeader(
     'Access-Control-Allow-Origin', '*'
   );
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS')
   next();
 })
 
 app.use("/api/posts", postsRoutes);
+app.use("/api/user", userRoutes);
 
 module.exports = app;
